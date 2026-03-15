@@ -1,9 +1,13 @@
+/*
+ * ЗАДАНИЕ 2: Умножение Карацубой.
+ * Два варианта: результат в первый операнд и новый объект.
+ */
 #include "../include/longint.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-// Вспомогательная функция: выделение половины числа
+// Вспомогательная: выделение половины числа 
 static LongInt *li_split(const LongInt *a, size_t split, bool high) {
     if (!a || split >= a->data[0]) return NULL;
     
@@ -153,11 +157,10 @@ int li_karatsuba_mul_to(LongInt *a, const LongInt *b) {
     LongInt *result = li_karatsuba_rec(a, b);
     if (!result) return -1;
     
-    // Заменяем содержимое a на результат
-    li_free(a);
+    // Заменяем содержимое a на результат (освобождаем старые данные a, копируем result в a)
+    if (a->data) free(a->data);
     *a = *result;
     free(result);
-    
     return 0;
 }
 

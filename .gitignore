@@ -1,0 +1,35 @@
+# Сборка и исполняемые файлы
+*.exe
+*.out
+*.o
+*.obj
+*.a
+*.so
+*.dll
+*.dylib
+*.lib
+*.exp
+*.pdb
+*.ilk
+*.vcxproj.user
+*.suo
+x64/
+Debug/
+Release/
+build/
+out/
+
+# IDE и редакторы
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Временные и системные
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+

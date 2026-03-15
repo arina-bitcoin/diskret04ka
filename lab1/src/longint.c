@@ -1,7 +1,11 @@
+/*
+ * ЗАДАНИЕ 1: Длинное целое — структура и базовые операции.
+ * Инициализация/деинициализация, сложение, вычитание, умножение в столбик
+ * (в двух вариантах: результат в первый операнд и новый объект).
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <assert.h>
 #include "longint.h"
 
 // Создание числа с заданным количеством цифр
@@ -27,7 +31,7 @@ LongInt *li_create(size_t digits) {
 void li_free(LongInt *a) {
     if (!a) return;
     if (a->data) {
-        // Затираем данные перед освобождением (безопасность)
+        // Затираем данные перед освобождением (безопасность) гыгы 
         memset(a->data, 0, (a->data[0] + 1) * sizeof(unsigned int));
         free(a->data);
     }
@@ -141,16 +145,19 @@ int li_add_to(LongInt *a, const LongInt *b) {
     if (li_is_negative(a) != li_is_negative(b)) {
         // Разные знаки - вызываем вычитание
         if (li_is_negative(a)) {
-            // a < 0, b > 0: a + b = b - |a|
+            // a < 0, b > 0: a + b = b - |a|. Копируем b в a, затем a -= |a| (b const — не меняем).
             LongInt *abs_a = li_copy(a);
             if (!abs_a) return -1;
-            abs_a->msd &= DIGIT_MASK; // Убираем знак
-            
-            int result = li_sub_from(b, abs_a);
-            if (result == 0) {
-                memcpy(a->data, b->data, (b->data[0] + 1) * sizeof(unsigned int));
-                a->msd = b->msd;
+            abs_a->msd &= DIGIT_MASK;
+            if (a->data[0] < b->data[0] + 1) {
+                unsigned int *new_data = realloc(a->data, (b->data[0] + 2) * sizeof(unsigned int));
+                if (!new_data) { li_free(abs_a); return -1; }
+                a->data = new_data;
             }
+            a->data[0] = b->data[0];
+            memcpy(a->data + 1, b->data + 1, b->data[0] * sizeof(unsigned int));
+            a->msd = b->msd;
+            int result = li_sub_from(a, abs_a);
             li_free(abs_a);
             return result;
         } else {
@@ -381,11 +388,13 @@ int li_mul_to(LongInt *a, const LongInt *b) {
     
     // Проверка на ноль
     if (li_is_zero(a) || li_is_zero(b)) {
-        li_free(a);
-        LongInt *zero = li_from_int(0);
-        if (!zero) return -1;
-        *a = *zero;
-        free(zero);
+        free(a->data);
+        LongInt *z = li_from_int(0);
+        if (!z) return -1;
+        a->data = z->data;
+        a->data[0] = z->data[0];
+        a->msd = z->msd;
+        free(z);
         return 0;
     }
     

@@ -1,3 +1,8 @@
+/*
+ * Длинное целое: API заданий 1 и 2.
+ * Задание 1: структура, создание/уничтожение, сложение, вычитание, умножение в столбик.
+ * Задание 2: умножение Карацубой.
+ */
 #ifndef LONGINT_H
 #define LONGINT_H
 
@@ -22,7 +27,6 @@ LongInt *li_copy(const LongInt *a);
 
 // Установка значения
 LongInt *li_from_int(int value);
-LongInt *li_from_string(const char *str);  
 char *li_to_string(const LongInt *a);     
 
 // Сравнение
@@ -55,5 +59,8 @@ LongInt *li_mul(const LongInt *a, const LongInt *b);
 int li_karatsuba_mul_to(LongInt *a, const LongInt *b);
 // Умножение Карацубой: результат = a * b (новый объект)
 LongInt *li_karatsuba_mul(const LongInt *a, const LongInt *b);
+
+// Тип функции умножения (для задания 3 и сравнения времени; объявление нужно в task3)
+typedef LongInt *(*li_mul_fn)(const LongInt *, const LongInt *);
 
 #endif // LONGINT_H
